@@ -1,7 +1,7 @@
 local indicator = "Off"
 
-RegisterNetEvent('pv:syncIndicator')
-AddEventHandler('pv:syncIndicator', function (playerId, IStatus)
+RegisterNetEvent('asser:syncIndicator')
+AddEventHandler('asser:syncIndicator', function (playerId, IStatus)
 	if GetPlayerFromServerId(playerId) ~= PlayerId() then
 		local ped = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(playerId)), false)
 		if IStatus == "Off" then
@@ -20,7 +20,7 @@ AddEventHandler('pv:syncIndicator', function (playerId, IStatus)
 	end
 end)
 
-AddEventHandler('pv:setIndicator', function (IStatus)
+AddEventHandler('asser:setIndicator', function (IStatus)
 	local ped = GetVehiclePedIsIn(GetPlayerPed(-1), false)
 	local HasTrailer, vehTrailer = GetVehicleTrailerVehicle(ped, vehTrailer)
 	if IStatus == "Off" then
@@ -54,8 +54,8 @@ AddEventHandler('pv:setIndicator', function (IStatus)
 	end
 end)
 
-RegisterNetEvent('pv:setHazards')
-AddEventHandler('pv:setHazards', function(hazardsDeactivate)
+RegisterNetEvent('asser:setHazards')
+AddEventHandler('asser:setHazards', function(hazardsDeactivate)
 	local ped = GetVehiclePedIsIn(GetPlayerPed(-1), true)
 	if ped ~= nil then
 		local setHazards = true
@@ -67,8 +67,8 @@ AddEventHandler('pv:setHazards', function(hazardsDeactivate)
 		else
 			indicator = "Off"
 		end
-		TriggerServerEvent("pv:syncIndicator", indicator)
-		TriggerEvent("pv:setIndicator", indicator)
+		TriggerServerEvent("asser:syncIndicator", indicator)
+		TriggerEvent("asser:setIndicator", indicator)
 	end
 end)
 
@@ -87,8 +87,8 @@ Citizen.CreateThread(function()
 					indicator = "Left"
 					pedHeading = GetEntityHeading(ped)
 				end
-				TriggerServerEvent("pv:syncIndicator", indicator)
-				TriggerEvent("pv:setIndicator", indicator)
+				TriggerServerEvent("asser:syncIndicator", indicator)
+				TriggerEvent("asser:setIndicator", indicator)
 			elseif IsControlJustPressed(1, 175) then
 				indicatorTime = 0
 				if indicator == "Right" then
@@ -97,8 +97,8 @@ Citizen.CreateThread(function()
 					indicator = "Right"
 					pedHeading = GetEntityHeading(ped)
 				end
-				TriggerServerEvent("pv:syncIndicator", indicator)
-				TriggerEvent("pv:setIndicator", indicator)
+				TriggerServerEvent("asser:syncIndicator", indicator)
+				TriggerEvent("asser:setIndicator", indicator)
 			elseif IsControlJustPressed(1, 173) then
 				indicatorTime = 0
 				if indicator == "Both" then
@@ -107,8 +107,8 @@ Citizen.CreateThread(function()
 					indicator = "Both"
 					pedHeading = GetEntityHeading(ped)
 				end
-				TriggerServerEvent("pv:syncIndicator", indicator)
-				TriggerEvent("pv:setIndicator", indicator)
+				TriggerServerEvent("asser:syncIndicator", indicator)
+				TriggerEvent("asser:setIndicator", indicator)
 			end
 			if indicatorTime == 0 then
 				if indicator ~= "Off" then
@@ -120,8 +120,8 @@ Citizen.CreateThread(function()
 			else
 				if GetGameTimer() >= indicatorTime and indicator ~= "Both" and (indicator == "Left" or indicator == "Right") then
 					indicator = "Off"
-					TriggerServerEvent("pv:syncIndicator", indicator)
-					TriggerEvent("pv:setIndicator", indicator)
+					TriggerServerEvent("asser:syncIndicator", indicator)
+					TriggerEvent("asser:setIndicator", indicator)
 				end
 			end
 		end
@@ -130,8 +130,8 @@ Citizen.CreateThread(function()
 				SetVehicleBrakeLights(ped, true)
 			end
 		end
-		for playerIds = 0,512 do
-			if NetworkIsPlayerActive(GetPlayerFromServerId(playerIds)) then
+		for playerIds = 0,31 do
+			if NetworkIsPlayerActive(playerIds) then
 				local networkPed = GetPlayerPed(GetPlayerFromServerId(playerIds))
 				local networkPedVeh = GetVehiclePedIsIn(networkPed, false)
 				if networkPedVeh ~= nil and networkPedVeh ~= false and GetPlayerFromServerId(playerIds) ~= PlayerId() and GetPedInVehicleSeat(networkPedVeh, -1) == networkPed and IsVehicleEngineOn(networkPedVeh) then

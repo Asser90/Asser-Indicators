@@ -1,7 +1,7 @@
-RegisterServerEvent('pv:syncIndicator')
-AddEventHandler('pv:syncIndicator', function(indicator)
+RegisterServerEvent('asser:syncIndicator')
+AddEventHandler('asser:syncIndicator', function(indicator)
 
 	local playerid = source
-	TriggerClientEvent('pv:syncIndicator', -1, playerid, indicator)
+	TriggerClientEvent('asser:syncIndicator', -1, playerid, indicator)
 	
 end)
