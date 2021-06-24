@@ -1,4 +1,5 @@
 local indicator = "Off"
+local indicatorPressed = ""
 
 RegisterNetEvent('asser:syncIndicator')
 AddEventHandler('asser:syncIndicator', function (playerId, IStatus)
@@ -79,7 +80,7 @@ Citizen.CreateThread(function()
 	while true do
 		local ped = GetVehiclePedIsIn(GetPlayerPed(-1), false)
 		if ped ~= nil and GetPedInVehicleSeat(ped, -1) == GetPlayerPed(-1) then
-			if IsControlJustPressed(1, 174) then
+			if indicatorPressed == "l" then
 				indicatorTime = 0
 				if indicator == "Left" then
 					indicator = "Off"
@@ -89,7 +90,7 @@ Citizen.CreateThread(function()
 				end
 				TriggerServerEvent("asser:syncIndicator", indicator)
 				TriggerEvent("asser:setIndicator", indicator)
-			elseif IsControlJustPressed(1, 175) then
+			elseif indicatorPressed == "r" then
 				indicatorTime = 0
 				if indicator == "Right" then
 					indicator = "Off"
@@ -99,7 +100,7 @@ Citizen.CreateThread(function()
 				end
 				TriggerServerEvent("asser:syncIndicator", indicator)
 				TriggerEvent("asser:setIndicator", indicator)
-			elseif IsControlJustPressed(1, 173) then
+			elseif indicatorPressed == "b" then
 				indicatorTime = 0
 				if indicator == "Both" then
 					indicator = "Off"
@@ -124,6 +125,7 @@ Citizen.CreateThread(function()
 					TriggerEvent("asser:setIndicator", indicator)
 				end
 			end
+			indicatorPressed = ""
 		end
 		if ped ~= nil and ped ~= false and GetPedInVehicleSeat(ped, -1) == GetPlayerPed(-1) and IsVehicleEngineOn(ped) then
 			if GetEntitySpeed(ped) < 4 and not IsControlPressed(1, 32) then
@@ -144,3 +146,16 @@ Citizen.CreateThread(function()
 		Citizen.Wait(1)
 	end
 end)
+local function SetIndicator(direction)
+	local ped = GetPlayerPed(-1)
+	if IsPedInAnyVehicle(ped, false) then
+		if GetPedInVehicleSeat(GetVehiclePedIsUsing(ped), -1) == ped then indicatorPressed = direction end
+	end
+end
+
+RegisterCommand('ileft', function() SetIndicator("l") end, false)
+RegisterKeyMapping('ileft', 'Left Indicator~', 'keyboard', 'left')
+RegisterCommand('iright', function() SetIndicator("r") end, false)
+RegisterKeyMapping('iright', 'Right Indicator~', 'keyboard', 'right')
+RegisterCommand('iboth', function() SetIndicator("b") end, false)
+RegisterKeyMapping('iboth', 'Hazard Indicators~', 'keyboard', 'down')
